@@ -1,22 +1,28 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
-import RecipeDetail from "./pages/RecipeDetail";
-import AddRecipeForm from "./components/AddRecipeForm";
-import Navbar from "./components/Navbar";
+import { Routes, Route } from 'react-router-dom'
+import Navbar from './components/Navbar'
+import Footer from './components/Footer'
+import Home from './pages/Home'
+import RecipeDetail from './pages/RecipeDetail'
+import Favorites from './pages/Favorites'
+import About from './pages/About'
+import { FavoritesProvider } from './context/FavoritesContext'
 
-function App() {
+export default function App() {
   return (
-    <Router>
-      <Navbar />
-      <div className="p-4">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/recipe/:id" element={<RecipeDetail />} />
-          <Route path="/add" element={<AddRecipeForm />} />
-        </Routes>
+    <FavoritesProvider>
+      <div className="min-h-screen flex flex-col">
+        <Navbar />
+        <main className="flex-1 container-prose py-6">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/recipe/:id" element={<RecipeDetail />} />
+            <Route path="/favorites" element={<Favorites />} />
+            <Route path="/about" element={<About />} />
+            <Route path="*" element={<p className="p-6">Not found</p>} />
+          </Routes>
+        </main>
+        <Footer />
       </div>
-    </Router>
-  );
+    </FavoritesProvider>
+  )
 }
-
-export default App;
