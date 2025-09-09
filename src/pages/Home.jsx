@@ -13,20 +13,34 @@ export default function Home() {
     const [categories, setCategories] = useState([])
     const [meals, setMeals] = useState([])
     const [loading, setLoading] = useState(false)
+    const [error, setError] = useState(null) // ⬅️ جديد
 
-    useEffect(() => { (async () => { setCategories(await listCategories()) })() }, [])
+    useEffect(() => {
+        (async () => {
+            setCategories(await listCategories())
+        })()
+    }, [])
 
-    function handleSearch({ q, mode }) { setQ(q); setMode(mode) }
+    function handleSearch({ q, mode }) {
+        setQ(q)
+        setMode(mode)
+    }
 
     useEffect(() => {
         let ignore = false
         async function run() {
             setLoading(true)
+            setError(null) // ⬅️ نمسح أي خطأ قديم
             let data = []
             try {
-                if (cat) data = await filterByCategory(cat)
-                else if (q) data = mode === 'name' ? await searchByName(q) : await searchByIngredient(q)
-            } catch (e) { /* ignore */ }
+                if (cat) {
+                    data = await filterByCategory(cat)
+                } else if (q) {
+                    data = mode === 'name' ? await searchByName(q) : await searchByIngredient(q)
+                }
+            } catch (e) {
+                setError("⚠️ Something went wrong while fetching recipes. Please try again.")
+            }
             if (!ignore) setMeals(data || [])
             setLoading(false)
         }
@@ -36,8 +50,9 @@ export default function Home() {
 
     const grid = useMemo(() => (
         <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {loading ? Array.from({ length: 8 }).map((_, i) => (<SkeletonCard key={i} />)) :
-                (meals?.map(m => <RecipeCard key={m.idMeal} meal={m} />))}
+            {loading
+                ? Array.from({ length: 8 }).map((_, i) => (<SkeletonCard key={i} />))
+                : (meals?.map(m => <RecipeCard key={m.idMeal} meal={m} />))}
         </div>
     ), [loading, meals])
 
@@ -61,9 +76,19 @@ export default function Home() {
                     </section>
                 )}
 
+                {/* رسالة الخطأ لو حصلت مشكلة في الـ API */}
+                {error && (
+                    <div className="bg-red-100 text-red-700 p-4 rounded mb-6">
+                        {error}
+                    </div>
+                )}
+
                 <section>
-                    {(!meals || meals.length === 0) && !loading ? (
-                        <EmptyState title="No recipes found" desc="Try searching for 'chicken' or a specific ingredient." />
+                    {(!meals || meals.length === 0) && !loading && !error ? (
+                        <EmptyState
+                            title="No recipes found"
+                            desc="Try searching for 'chicken' or a specific ingredient."
+                        />
                     ) : grid}
                 </section>
             </div>
