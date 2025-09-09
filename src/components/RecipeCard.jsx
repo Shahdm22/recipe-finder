@@ -1,28 +1,24 @@
 import { Link } from 'react-router-dom'
-import { useFavorites } from '../context/FavoritesContext'
 
 export default function RecipeCard({ meal }) {
-    const { isFav, toggleFav } = useFavorites()
-    const fav = isFav(meal.idMeal)
+    if (!meal) return null;
+    const thumb = meal.strMealThumb || '/placeholder.png';
 
     return (
-        <article className="card group">
-            <div className="aspect-w-16 aspect-h-11">
-                <img src={meal.strMealThumb} alt={meal.strMeal} className="w-full h-full object-cover transition-transform group-hover:scale-105" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-                <button onClick={() => toggleFav(meal)} aria-label="toggle favorite" className="absolute right-3 top-3 z-10 bg-white/80 rounded-full p-2">
-                    {fav ? '♥' : '♡'}
-                </button>
+        <article className="rounded-2xl shadow p-3 bg-white hover:shadow-md transition" role="group">
+            <img
+                src={thumb}
+                alt={meal.strMeal || 'Recipe image'}
+                loading="lazy"
+                onError={(e) => { e.currentTarget.src = '/placeholder.png' }}
+                className="w-full h-48 object-cover rounded-xl"
+            />
+            <div className="mt-3 flex items-start justify-between gap-2">
+                <h3 className="font-semibold text-sm line-clamp-2" title={meal.strMeal}>{meal.strMeal}</h3>
             </div>
-
-            <div className="p-4">
-                <h3 className="font-semibold text-lg line-clamp-2">{meal.strMeal}</h3>
-                <p className="text-sm text-gray-500 mt-1">{meal.strArea} · {meal.strCategory}</p>
-                <div className="mt-3 flex items-center justify-between">
-                    <Link to={`/recipe/${meal.idMeal}`} className="text-sm text-brand font-medium">View details →</Link>
-                    <span className="text-xs text-gray-400">Quick</span>
-                </div>
-            </div>
+            <Link to={`/recipe/${meal.idMeal}`} className="mt-2 w-full block rounded-xl border py-2 text-center hover:bg-gray-50" aria-label={`Open details for ${meal.strMeal}`}>
+                Details
+            </Link>
         </article>
     )
 }
